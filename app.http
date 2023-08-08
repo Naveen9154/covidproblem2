@@ -1,19 +1,18 @@
 POST http://localhost:3000/login/
-
-
 Content-Type: application/json
 
 {
   "username": "christopher_phillips",
   "password": "christy@123"
 }
-//{jwtToken:mkknljkbn.jkbhjbolbknkjbhbvobujbub}
 
 ###
-
 GET http://localhost:3000/states/
 ###
 GET http://localhost:3000/states/25/
+
+###
+GET http://localhost:3000/districts/105/
 ###
 POST http://localhost:3000/districts/
 Content-Type: application/json
@@ -28,12 +27,10 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/districts/105/
-###
-DELETE  http://localhost:3000/districts/80/
-###
-PuT http://localhost:3000/districts/105/
+DELETE http://localhost:3000/districts/80/
 
+###
+PUT http://localhost:3000/districts/105/
 Content-Type: application/json
 
 {

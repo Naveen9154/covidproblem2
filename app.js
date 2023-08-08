@@ -47,7 +47,7 @@ const ConOfDiToRes = (ObjectDb) => {
   };
 };
 
-const authenticateToken = (request, response, next) => {
+function authenticateToken(request, response, next) {
   let jwtToken;
   const authHeader = request.headers["authorization"];
   if (authHeader !== undefined) {
@@ -62,12 +62,11 @@ const authenticateToken = (request, response, next) => {
         response.status(401);
         response.send("Invalid JWT Token");
       } else {
-        request.username = payload.username;
         next();
       }
     });
   }
-};
+}
 
 app.post("/login/", async (request, response) => {
   const { username, password } = request.body;
@@ -105,6 +104,19 @@ app.get("/states/:stateId/", async (request, response) => {
   response.send(ConOfStToRes(stat));
 });
 
+app.get(
+  "/districts/:districtId/",
+  authenticateToken,
+
+  async (request, response) => {
+    const { districtId } = request.params;
+    const DisLi = `SELECT * FROM district
+    WHERE district_id=${districtId}`;
+    const Dis = await db.get(DisLi);
+    response.send(ConOfDiToRes(Dis));
+  }
+);
+
 app.post("/districts/", authenticateToken, async (request, response) => {
   const districtDetails = request.body;
   const {
@@ -130,18 +142,6 @@ app.post("/districts/", authenticateToken, async (request, response) => {
   response.send("District Successfully Added");
 });
 
-app.get(
-  "/districts/:districtId/",
-  authenticateToken,
-  async (request, response) => {
-    const { districtId } = request.params;
-    const DisLi = `SELECT * FROM district
-    WHERE district_id=${districtId}`;
-    const Dis = await db.get(DisLi);
-    response.send(ConOfDiToRes(Dis));
-  }
-);
-
 app.delete(
   "/districts/:districtId/",
   authenticateToken,
@@ -157,6 +157,7 @@ app.delete(
 app.put(
   "/districts/:districtId/",
   authenticateToken,
+
   async (request, response) => {
     const { districtId } = request.params;
     const districtDetails = request.body;
@@ -187,6 +188,7 @@ app.put(
 app.get(
   "/states/:stateId/stats/",
   authenticateToken,
+
   async (request, response) => {
     const { stateId } = request.params;
     const staLi = `SELECT 
@@ -203,6 +205,7 @@ app.get(
 app.get(
   "/districts/:districtId/details/",
   authenticateToken,
+
   async (request, response) => {
     const { districtId } = request.params;
     const DisLi = `SELECT 
